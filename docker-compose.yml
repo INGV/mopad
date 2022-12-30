@@ -5,17 +5,17 @@ networks:
 
 services:
   site:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: mopad-nginx
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    image: ingv/mopad
+    container_name: mopad_container
     ports:
       - 8383:80
     volumes:
       - mopad_cache:/var/cache/
     networks:
       - mopad
-
 
 volumes:
   mopad_cache:
