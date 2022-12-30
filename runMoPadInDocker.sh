@@ -10,5 +10,5 @@ xhost +${MYIP} || exit
 docker run --rm -it \
 	-e DISPLAY=${MYIP}:0 \
 	--mount type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix \
-	mopad_site \
+	ingv/mopad \
 	$@
