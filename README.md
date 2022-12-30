@@ -1,10 +1,8 @@
-# MoPad in Docker
+# MoPaD - Moment tensor Plotting and Decomposition 
 
-Run MoPad within a docker
+Run MoPad within a docker.
 
-## MoPaD -- Moment tensor Plotting and Decomposition
-
-A tool for graphical and numerical analysis of seismic moment tensors
+MoPad is a tool for graphical and numerical analysis of seismic moment tensors
 
 by Lars Krieger and Sebastian Heimann
 
@@ -12,16 +10,41 @@ http://www.larskrieger.de/mopad/
 
 https://github.com/geophysics/MoPaD
 
-### Build
+## Quickstart
+### Get Docker image
+To obtain *mopad* docker image, you have two options:
 
+#### 1) Get built image from DockerHub (*preferred*)
+Get the last built image from DockerHub repository:
 ```
-docker-compose build
+$ docker pull ingv/mopad:latest
+```
+
+#### 2) Build by yourself
+Clone the git repositry:
+```sh
+git clone https://github.com/INGV/mopad.git
+cd mopad
+```
+build the image:
+```sh
+$ docker build --tag ingv/mopad . 
+```
+
+in case of errors, try:
+```sh
+$ docker build --no-cache --pull --tag ingv/fdsnws-fetcher . 
 ```
 
 ### Run as service
-
+Make a local *volume* (directory) for the cache:
 ```sh
-docker-compose up -d
+mkdir /tmp/mopad_cache
+```
+
+run the container:
+```sh
+docker run -d --name mopad_container --rm -v /tmp/mopad_cache:/var/cache -p 8383:80 ingv/mopad
 ```
 
 Then test access to http://localhost:8383/.
@@ -32,12 +55,12 @@ Examples of URL:
 - http://localhost:8383/cgi-bin/mopad.cgi?plot_arg=-40.568,-24.033,64.601,125.752,-90.024,-7.461&color=0,255,0
 - http://localhost:8383/cgi-bin/mopad.cgi?plot_arg=-63.828,-8.743,72.571,19.328,-12.439,-9.573&color=blue
 
-Reminder: mopad plot ${mxx},${myy},${mzz},${mxy},${mxz},${myz} ...
+Reminder: mopad plot `mxx`,`myy`,`mzz`,`mxy`,`mxz`,`myz` ...
 
 ### Run without X11 display
 
 ```sh
-docker run --rm -it mopad_site ...mopad-arguments...
+docker run --rm -it ingv/mopad ...mopad-arguments...
 ```
 
 ### Run with X11 display
@@ -46,7 +69,7 @@ docker run --rm -it mopad_site ...mopad-arguments...
 docker run --rm -it \
 	-e DISPLAY=${MYIP}:0 \
 	--mount type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix \
-	mopad_site \
+	ingv/mopad \
 	$@
 ```
 
@@ -61,7 +84,7 @@ docker run --rm -it \
 ##### Additonal argument "piped"
 
 ```
-docker run --rm mopad_site piped ...mopad-arguments... -f "docker_outfilename" > "host_outfilename"
+docker run --rm ingv/mopad piped ...mopad-arguments... -f "docker_outfilename" > "host_outfilename"
 ```
 
 **N.B.: "docker_outfilename" must be the last argument.**
@@ -69,16 +92,16 @@ docker run --rm mopad_site piped ...mopad-arguments... -f "docker_outfilename" >
 Examples:
 
 ```
-docker run --rm  mopad_site piped plot 0,1,-1,0,0,0 -f tmp.svg > out.svg
+docker run --rm  ingv/mopad piped plot 0,1,-1,0,0,0 -f tmp.svg > out.svg
 ```
 
 ```
-docker run --rm  mopad_site piped plot 0,1,-1,0,0,0 -f tmp.png > out.png
+docker run --rm  ingv/mopad piped plot 0,1,-1,0,0,0 -f tmp.png > out.png
 ```
 
 ##### Custom pipe usage
 
 ```
-docker run --rm mopad_site "mopad plot 0,1,-1,0,0,0 -f tmp.png && cat tmp.png" > out.png
+docker run --rm ingv/mopad "mopad plot 0,1,-1,0,0,0 -f tmp.png && cat tmp.png" > out.png
 ```
 
