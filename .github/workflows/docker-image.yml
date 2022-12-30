@@ -40,13 +40,15 @@ jobs:
           #tags: ${{ steps.meta.outputs.tags }}
           #labels: ${{ steps.meta.outputs.labels }}
           
-      - name: Sync README file
-        uses: ms-jpq/sync-dockerhub-readme@v1
+      - name: Push README to Dockerhub
+        uses: christian-korneck/update-container-description-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          repository: ingv/mopad
-          readme: "./README.md"
+          provider: dockerhub
+          destination_container_repo: ingv/mopad
+          readme_file: 'README.md'
+          short_description: 'my short description 😊'
         
       #- uses: actions/checkout@v3
       #- name: Build the Docker image
