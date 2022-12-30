@@ -1,0 +1,31 @@
+version: '3'
+
+networks:
+  mopad:
+
+services:
+  site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mopad-nginx
+    ports:
+      - 8383:80
+    volumes:
+      - mopad_cache:/var/cache/
+      # - ./CRISP/crispfe:/var/www/html:delegated
+      # - ./CRISP/tmp:/tmp:consistent
+    # depends_on:
+      # - php
+      # - redis
+      # - mysql
+      # - postgresql
+      # - mailhog
+    networks:
+      - mopad
+
+
+volumes:
+  mopad_cache:
+    driver: local
+
