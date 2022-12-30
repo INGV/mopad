@@ -1,3 +1,13 @@
+[![License](https://img.shields.io/github/license/INGV/mopad.svg)](https://github.com/INGV/mopad/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/INGV/mopad.svg)](https://github.com/INGV/mopad/issues)
+
+[![Docker build](https://img.shields.io/badge/docker%20build-from%20CI-yellow)](https://hub.docker.com/r/ingv/mopad)
+![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/ingv/mopad?sort=semver)
+![Docker Pulls](https://img.shields.io/docker/pulls/ingv/mopad)
+
+[![CI](https://github.com/INGV/mopad/actions/workflows/docker-image.yml/badge.svg)](https://github.com/INGV/mopad/actions)
+[![GitHub](https://img.shields.io/static/v1?label=GitHub&message=Link%20to%20repository&color=blueviolet)](https://github.com/INGV/mopad)
+
 # MoPaD - Moment tensor Plotting and Decomposition 
 
 Run MoPad within a docker.
@@ -16,8 +26,8 @@ To obtain *mopad* docker image, you have two options:
 
 #### 1) Get built image from DockerHub (*preferred*)
 Get the last built image from DockerHub repository:
-```
-$ docker pull ingv/mopad:latest
+```sh
+docker pull ingv/mopad:latest
 ```
 
 #### 2) Build by yourself
@@ -28,21 +38,21 @@ cd mopad
 ```
 build the image:
 ```sh
-$ docker build --tag ingv/mopad . 
+docker build --tag ingv/mopad . 
 ```
 
 in case of errors, try:
 ```sh
-$ docker build --no-cache --pull --tag ingv/fdsnws-fetcher . 
+docker build --no-cache --pull --tag ingv/mopad . 
 ```
 
 ### Run as service
-Make a local *volume* (directory) for the cache:
+Make a local *volume* (directory) for nginx cache:
 ```sh
 mkdir /tmp/mopad_cache
 ```
 
-run the container:
+run the container in daemon (`-d`) mode:
 ```sh
 docker run -d --name mopad_container --rm -v /tmp/mopad_cache:/var/cache -p 8383:80 ingv/mopad
 ```
@@ -105,3 +115,14 @@ docker run --rm  ingv/mopad piped plot 0,1,-1,0,0,0 -f tmp.png > out.png
 docker run --rm ingv/mopad "mopad plot 0,1,-1,0,0,0 -f tmp.png && cat tmp.png" > out.png
 ```
 
+## Contribute
+Thanks to your contributions!
+
+Here is a list of users who already contributed to this repository: \
+<a href="https://github.com/ingv/mopad/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ingv/mopad" />
+</a>
+
+## Author
+(c) 2022 Matteo Quintiliani matteo.quintiliani[at]ingv.it \
+(c) 2022 Valentino Lauciani valentino.lauciani[at]ingv.it
