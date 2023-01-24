@@ -49,7 +49,7 @@ jobs:
           provider: dockerhub
           destination_container_repo: ingv/mopad
           readme_file: 'README.md'
-          short_description: 'my short description 😊'
+          short_description: 'MoPaD - Moment tensor Plotting and Decomposition'
         
       #- uses: actions/checkout@v3
       #- name: Build the Docker image
