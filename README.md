@@ -46,7 +46,7 @@ in case of errors, try:
 docker build --no-cache --pull --tag ingv/mopad . 
 ```
 
-### Run as service
+### Run as a service
 Make a local *volume* (directory) for nginx cache:
 ```sh
 mkdir /tmp/mopad_cache
@@ -126,3 +126,5 @@ Here is a list of users who already contributed to this repository: \
 ## Author
 (c) 2022 Matteo Quintiliani matteo.quintiliani[at]ingv.it \
 (c) 2022 Valentino Lauciani valentino.lauciani[at]ingv.it
+
+Istituto Nazionale di Geofisica e Vulcanologia, Italia
