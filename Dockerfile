@@ -28,6 +28,10 @@ ENV GIT_MOPAD_BASE_URL=https://github.com/geophysics/MoPaD.git
 		# py-numpy \
 		# py-matplotlib
 
+# buster left the Debian mirrors in 2024: point apt at the archive.
+RUN sed -i -e "s|http://deb.debian.org/debian|http://archive.debian.org/debian|g" -e "s|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g" -e "/buster-updates/d" /etc/apt/sources.list \
+		&& echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99archive
+
 RUN apt-get clean && apt-get update \
 		&& apt-get dist-upgrade -y --no-install-recommends \
 		&& apt-get install -y \
