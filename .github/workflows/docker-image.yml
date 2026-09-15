@@ -1,8 +1,12 @@
 name: Docker Image CI
 
+# Tags follow the git ref (kube/RKE2 issue #10, INGV/mopad#1): a release tag
+# vX.Y.Z publishes ingv/mopad:X.Y.Z, every push to main publishes the short
+# SHA and refreshes latest. Argo CD deploys the immutable ones.
 on:
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
 
@@ -13,34 +17,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
-        
+        uses: actions/checkout@v4
+
+      # Pull requests only build: no secrets on forks, nothing to publish.
       - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          
-      #- name: Extract metadata (tags, labels) for Docker
-      #  id: meta
-      #  uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-      #  with:
-      #    images: my-docker-hub-namespace/my-docker-hub-repository
-      
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ingv/mopad
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          push: true
-          tags: ingv/mopad:latest
-          #tags: ${{ steps.meta.outputs.tags }}
-          #labels: ${{ steps.meta.outputs.labels }}
-          
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
       - name: Push README to Dockerhub
+        if: github.event_name != 'pull_request'
         uses: christian-korneck/update-container-description-action@v1
         env:
           DOCKER_USER: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -50,7 +60,3 @@ jobs:
           destination_container_repo: ingv/mopad
           readme_file: 'README.md'
           short_description: 'MoPaD - Moment tensor Plotting and Decomposition'
-        
-      #- uses: actions/checkout@v3
-      #- name: Build the Docker image
-      #  run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
